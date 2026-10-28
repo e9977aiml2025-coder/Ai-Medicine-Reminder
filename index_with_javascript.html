@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MediCare AI</title>
+<style>
+:root{--ink:#172b4d;--muted:#68778d;--brand:#147d78;--brand-dark:#0c625e;--bg:#f4f7fb;--line:#e1e8f0;--white:#fff;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,Segoe UI,Arial,sans-serif}
+.layout{min-height:100vh;display:grid;grid-template-columns:245px 1fr}aside{background:#102b3f;color:#fff;padding:26px 17px;display:flex;flex-direction:column;gap:28px}
+.brand{font-size:21px;font-weight:700;display:flex;gap:10px;align-items:center;padding:0 10px}.brand-mark{background:#1c9b91;border-radius:10px;padding:3px 9px}
+nav{display:grid;gap:8px}.nav,.logout{border:0;background:transparent;color:#d9e6ef;text-align:left;padding:12px 14px;border-radius:10px;font-size:15px;cursor:pointer}.nav:hover,.nav.active{background:#21465b;color:#fff}.sidebar-note{margin-top:auto;background:#19394d;border-radius:12px;padding:14px;color:#d6e5ed;font-size:13px}.sidebar-note p{margin-bottom:0;color:#b6cbd8}.logout{border:1px solid #426174;text-align:center}
+main{padding:30px;min-width:0}header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:26px}h1{font-size:28px;margin:3px 0 0}h2{font-size:19px;margin:0 0 5px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--brand);margin:0}.header-tools{display:flex;align-items:center;gap:12px}.live-clock,.userbox{background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:10px;font-weight:600}.userbox{color:var(--muted)}
+.welcome-card{background:linear-gradient(115deg,#e0f6f2,#f1fbfa);border:1px solid #cdece6;border-radius:18px;padding:26px;display:flex;align-items:center;justify-content:space-between;gap:18px}.welcome-card p{color:#496a70;margin:8px 0 0}.welcome-card h2{font-size:24px}.welcome-symbol{font-size:48px;color:var(--brand);background:#fff9;border-radius:18px;padding:10px 18px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0}.stat-card,.panel{background:var(--white);border:1px solid var(--line);border-radius:15px;padding:21px}.stat-card span,.stat-card small{display:block;color:var(--muted)}.stat-card strong{display:block;font-size:31px;margin:8px 0}.panel{margin-top:18px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.panel-heading p{margin:0;color:var(--muted);font-size:13px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.form-grid label,#aiForm label{display:grid;gap:6px;font-weight:600;font-size:13px;color:#34445a}input,select,textarea{width:100%;border:1px solid #ccd7e3;border-radius:9px;padding:11px 12px;font:inherit;color:var(--ink);background:#fff;min-width:0}input:focus,select:focus,textarea:focus{outline:2px solid #a5ddd7;border-color:var(--brand)}.form-actions{grid-column:1/-1;display:flex;gap:10px}
+.btn{border:0;background:var(--brand);color:#fff;padding:10px 15px;border-radius:9px;font-weight:650;cursor:pointer}.btn:hover{background:var(--brand-dark)}.btn-secondary{background:#eef3f7;color:#34445a}.btn-secondary:hover{background:#e0e8ef}.btn-danger{background:#fff0ee;color:var(--red)}.btn-danger:hover{background:#ffe1dc}.btn-small{padding:6px 9px;font-size:12px}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#f8fafc}td{font-size:14px}tr:last-child td{border-bottom:0}.status{display:inline-block;border-radius:20px;background:#fff4d8;color:#8a5b00;padding:4px 9px;font-size:12px}.empty-state{text-align:center;padding:25px;color:var(--muted);background:#fafcfe;border-radius:10px}.demo-note{font-size:12px;color:var(--muted);margin:16px 2px}.ai-panel{max-width:760px}.ai-icon{color:var(--brand);font-size:30px}.ai-panel>p{color:var(--muted)}#aiForm{display:grid;gap:12px;margin-top:20px}.ai-answer{white-space:pre-wrap;margin-top:15px;padding:14px;border-radius:10px;background:#edf8f6;color:#24514d;min-height:0}.ai-answer:empty{display:none}#toast{position:fixed;right:22px;bottom:22px;background:#173b4c;color:#fff;padding:13px 18px;border-radius:10px;box-shadow:0 8px 30px #102b3f30;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}#toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:850px){.layout{grid-template-columns:1fr}aside{padding:14px;gap:15px}.brand{padding:0 5px}nav{grid-template-columns:repeat(3,minmax(0,1fr))}.nav{text-align:center;padding:10px 5px;font-size:13px}.sidebar-note{display:none}.logout{align-self:flex-start;padding:8px 15px}main{padding:18px}header{align-items:flex-start;flex-direction:column}.header-tools{flex-wrap:wrap}.stats-grid{grid-template-columns:1fr}.welcome-card h2{font-size:20px}.welcome-symbol{font-size:34px}}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr}.form-actions{grid-column:auto}.welcome-symbol{display:none}.panel{padding:15px}.panel-heading{align-items:flex-start;flex-direction:column}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand"><span class="brand-mark">✚</span><span>MediCare <b>AI</b></span></div>
+  <nav>
+    <button class="nav active" data-page="dashboard">▦ Dashboard</button>
+    <button class="nav" data-page="patients">♙ Patients</button>
+    <button class="nav" data-page="prescriptions">▤ Prescriptions</button>
+    <button class="nav" data-page="reminders">◷ Reminders</button>
+    <button class="nav" data-page="ai">✦ AI Assistant</button>
+  </nav>
+  <div class="sidebar-note"><b>College Mini Project</b><p>Patient-safe medication management demo.</p></div>
+  <button id="logout" class="logout">Clear demo data</button>
+</aside>
+<main>
+  <header><div><p class="eyebrow">MEDICATION MANAGEMENT</p><h1 id="title">Good day 👋</h1></div>
+    <div class="header-tools"><div class="live-clock" id="liveClock">--:--:--</div><div class="userbox" id="userbox">Demo workspace</div></div>
+  </header>
+  <section id="app"></section>
+</main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  "use strict";
+  const $ = (s, root=document) => root.querySelector(s);
+  const app=$("#app"), title=$("#title"), toastBox=$("#toast");
+  const STORAGE_KEY="medicareAI_demo_v1";
+  const emptyData={patients:[],prescriptions:[],reminders:[]};
+  let data=loadData(), activePage="dashboard", toastTimer;
+
+  function loadData(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");return saved&&typeof saved==="object"?{...emptyData,...saved}:JSON.parse(JSON.stringify(emptyData));}catch{return JSON.parse(JSON.stringify(emptyData));}}
+  function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch{showToast("Could not save data in this browser.");}}
+  function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function id(){return window.crypto&&crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random().toString(16).slice(2)}`;}
+  function showToast(msg){toastBox.textContent=msg;toastBox.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastBox.classList.remove("show"),2600);}
+  function clock(){const el=$("#liveClock");if(el)el.textContent=new Intl.DateTimeFormat(undefined,{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true}).format(new Date());}
+  function today(){const d=new Date(),local=new Date(d.getTime()-d.getTimezoneOffset()*60000);return local.toISOString().slice(0,10);}
+  function dateText(v){if(!v)return "—";const d=new Date(v+"T00:00:00");return isNaN(d)?esc(v):d.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});}
+  function patientName(pid){return data.patients.find(p=>p.id===pid)?.name||"Patient removed";}
+  function btn(label,action,rid="",cls="btn"){return `<button type="button" class="${cls}" data-action="${action}" ${rid?`data-id="${esc(rid)}"`:""}>${label}</button>`;}
+  function table(heads,rows,empty){return rows.length?`<div class="table-wrap"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`:`<div class="empty-state">${empty}</div>`;}
+  function options(selected=""){return data.patients.map(p=>`<option value="${esc(p.id)}" ${p.id===selected?"selected":""}>${esc(p.name)}</option>`).join("");}
+
+  function dashboard(){
+    const t=today(), upcoming=[...data.reminders].filter(r=>r.date>=t).sort((a,b)=>(a.date+" "+a.time).localeCompare(b.date+" "+b.time)).slice(0,5);
+    return `<div class="welcome-card"><div><p class="eyebrow">YOUR HEALTH WORKSPACE</p><h2>Medication management, made simpler.</h2><p>Manage patient details, prescriptions, and medicine reminders in one place.</p></div><div class="welcome-symbol">✚</div></div>
+    <div class="stats-grid"><article class="stat-card"><span>Total patients</span><strong>${data.patients.length}</strong><small>Patient profiles saved</small></article><article class="stat-card"><span>Prescriptions</span><strong>${data.prescriptions.length}</strong><small>Records in this demo</small></article><article class="stat-card"><span>Reminders today</span><strong>${data.reminders.filter(r=>r.date===t).length}</strong><small>Scheduled for today</small></article></div>
+    <section class="panel"><div class="panel-heading"><div><h2>Upcoming reminders</h2><p>Next scheduled medicine reminders</p></div>${btn("View reminders","goto-reminders","","btn btn-secondary")}</div>
+    ${table(["Date","Time","Patient","Medicine","Status"],upcoming.map(r=>`<tr><td>${dateText(r.date)}</td><td>${esc(r.time)}</td><td>${esc(patientName(r.patientId))}</td><td>${esc(r.medicine)}</td><td><span class="status">${esc(r.status||"Pending")}</span></td></tr>`),"No upcoming reminders. Add a reminder to get started.")}</section>
+    <p class="demo-note">Demo only: information is stored in this browser. Do not enter real patient or medical data.</p>`;
+  }
+  function patientsPage(){
+    const rows=data.patients.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.age||"—")}</td><td>${esc(p.phone||"—")}</td><td>${esc(p.condition||"—")}</td><td class="actions">${btn("Edit","edit-patient",p.id,"btn btn-small btn-secondary")}${btn("Delete","delete-patient",p.id,"btn btn-small btn-danger")}</td></tr>`);
+    return `<section class="panel"><div class="panel-heading"><div><h2>Add patient</h2><p>Enter basic patient details</p></div></div><form id="patientForm" class="form-grid">
+    <label>Full name<input name="name" required maxlength="100" placeholder="Patient name"></label><label>Age<input name="age" type="number" min="0" max="130" placeholder="Age"></label><label>Mobile number<input name="phone" type="tel" maxlength="25" placeholder="Phone number"></label><label>Condition / notes<input name="condition" maxlength="250" placeholder="Optional notes"></label>
+    <div class="form-actions"><button class="btn" type="submit">Add patient</button><button class="btn btn-secondary" type="reset">Clear</button></div></form></section>
+    <section class="panel"><div class="panel-heading"><div><h2>All patients</h2><p>${data.patients.length} patient record(s)</p></div></div>${table(["Name","Age","Mobile","Condition / notes","Actions"],rows,"No patients yet. Use the form above to add one.")}</section>`;
+  }
+  function prescriptionsPage(){
+    const rows=data.prescriptions.map(p=>`<tr><td>${esc(patientName(p.patientId))}</td><td>${esc(p.medicine)}</td><td>${esc(p.dosage)}</td><td>${esc(p.frequency)}</td><td>${dateText(p.startDate)}</td><td class="actions">${btn("Edit","edit-prescription",p.id,"btn btn-small btn-secondary")}${btn("Delete","delete-prescription",p.id,"btn btn-small btn-danger")}</td></tr>`);
+    return `<section class="panel"><div class="panel-heading"><div><h2>Add prescription</h2><p>Record details as written by the prescriber</p></div></div>${data.patients.length?`<form id="prescriptionForm" class="form-grid"><label>Patient<select name="patientId" required>${options()}</select></label><label>Medicine name<input name="medicine" required maxlength="100" placeholder="Medicine name"></label><label>Dosage<input name="dosage" required maxlength="100" placeholder="e.g. 1 tablet"></label><label>Frequency<input name="frequency" required maxlength="100" placeholder="e.g. twice daily"></label><label>Start date<input name="startDate" type="date" value="${today()}" required></label><div class="form-actions"><button class="btn" type="submit">Add prescription</button></div></form>`:`<div class="empty-state">Add a patient before creating a prescription. ${btn("Go to Patients","goto-patients","","btn")}</div>`}</section>
+    <section class="panel"><div class="panel-heading"><div><h2>Prescription list</h2><p>${data.prescriptions.length} prescription(s)</p></div></div>${table(["Patient","Medicine","Dosage","Frequency","Start date","Actions"],rows,"No prescriptions saved yet.")}</section>`;
+  }
+  function remindersPage(){
+    const rows=[...data.reminders].sort((a,b)=>(a.date+" "+a.time).localeCompare(b.date+" "+b.time)).map(r=>`<tr><td>${dateText(r.date)}</td><td>${esc(r.time)}</td><td>${esc(patientName(r.patientId))}</td><td>${esc(r.medicine)}</td><td><span class="status">${esc(r.status||"Pending")}</span></td><td class="actions">${btn("Mark done","done-reminder",r.id,"btn btn-small")}${btn("Edit","edit-reminder",r.id,"btn btn-small btn-secondary")}${btn("Delete","delete-reminder",r.id,"btn btn-small btn-danger")}</td></tr>`);
+    return `<section class="panel"><div class="panel-heading"><div><h2>Schedule a reminder</h2><p>Create a reminder record for a patient</p></div></div>${data.patients.length?`<form id="reminderForm" class="form-grid"><label>Patient<select name="patientId" required>${options()}</select></label><label>Medicine<input name="medicine" required maxlength="100" placeholder="Medicine name"></label><label>Date<input name="date" type="date" value="${today()}" required></label><label>Time<input name="time" type="time" required></label><div class="form-actions"><button class="btn" type="submit">Add reminder</button></div></form>`:`<div class="empty-state">Add a patient before scheduling reminders. ${btn("Go to Patients","goto-patients","","btn")}</div>`}</section>
+    <section class="panel"><div class="panel-heading"><div><h2>All reminders</h2><p>Reminder records saved in this browser</p></div></div>${table(["Date","Time","Patient","Medicine","Status","Actions"],rows,"No reminders yet.")}</section><p class="demo-note">This demo does not send SMS or guarantee background notifications.</p>`;
+  }
+  function aiPage(){return `<section class="panel ai-panel"><div class="ai-icon">✦</div><h2>MediCare AI Assistant</h2><p>Ask for general explanations of common prescription terms or help organizing a schedule.</p><form id="aiForm"><label for="aiQuestion">Your question</label><textarea id="aiQuestion" name="question" rows="3" maxlength="1000" required placeholder="e.g. What does twice daily mean?"></textarea><button class="btn" type="submit">Get explanation</button></form><div id="aiAnswer" class="ai-answer" aria-live="polite"></div><p class="demo-note">This is a basic demo with preset responses, not a connected AI model. It cannot diagnose conditions or prescribe medicine.</p></section>`;}
+  function render(){
+    const pages={dashboard,patients:patientsPage,prescriptions:prescriptionsPage,reminders:remindersPage,ai:aiPage};
+    app.innerHTML=(pages[activePage]||dashboard)();
+    document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===activePage));
+    title.textContent=({dashboard:"Good day 👋",patients:"Patients",prescriptions:"Prescriptions",reminders:"Medicine reminders",ai:"AI Assistant"})[activePage]||"MediCare AI";
+  }
+  function editRecord(collection,rid,fields,label){
+    const record=data[collection].find(x=>x.id===rid);if(!record)return;
+    const changes={};
+    for(const f of fields){const v=prompt("Edit "+f.label+":",record[f.key]??"");if(v===null)return;if(f.required&&!v.trim()){showToast(f.label+" cannot be empty.");return;}changes[f.key]=v.trim();}
+    Object.assign(record,changes);saveData();render();showToast(label+" updated.");
+  }
+  document.addEventListener("click",e=>{
+    const nav=e.target.closest(".nav[data-page]");if(nav){activePage=nav.dataset.page;render();return;}
+    const b=e.target.closest("[data-action]");if(!b)return;const {action,rid}= {action:b.dataset.action,rid:b.dataset.id};
+    if(action==="goto-reminders"){activePage="reminders";render();return;}
+    if(action==="goto-patients"){activePage="patients";render();return;}
+    if(action==="edit-patient")return editRecord("patients",rid,[{key:"name",label:"Name",required:true},{key:"age",label:"Age"},{key:"phone",label:"Mobile"},{key:"condition",label:"Condition / notes"}],"Patient");
+    if(action==="delete-patient"){const p=data.patients.find(x=>x.id===rid);if(p&&confirm("Delete "+p.name+" and related prescriptions/reminders?")){data.patients=data.patients.filter(x=>x.id!==rid);data.prescriptions=data.prescriptions.filter(x=>x.patientId!==rid);data.reminders=data.reminders.filter(x=>x.patientId!==rid);saveData();render();showToast("Patient and related records deleted.");}}
+    if(action==="edit-prescription")return editRecord("prescriptions",rid,[{key:"medicine",label:"Medicine",required:true},{key:"dosage",label:"Dosage",required:true},{key:"frequency",label:"Frequency",required:true},{key:"startDate",label:"Start date",required:true}],"Prescription");
+    if(action==="delete-prescription"&&confirm("Delete this prescription?")){data.prescriptions=data.prescriptions.filter(x=>x.id!==rid);saveData();render();showToast("Prescription deleted.");}
+    if(action==="edit-reminder")return editRecord("reminders",rid,[{key:"medicine",label:"Medicine",required:true},{key:"date",label:"Date",required:true},{key:"time",label:"Time",required:true},{key:"status",label:"Status",required:true}],"Reminder");
+    if(action==="done-reminder"){const r=data.reminders.find(x=>x.id===rid);if(r){r.status="Done";saveData();render();showToast("Reminder marked done.");}}
+    if(action==="delete-reminder"&&confirm("Delete this reminder?")){data.reminders=data.reminders.filter(x=>x.id!==rid);saveData();render();showToast("Reminder deleted.");}
+  });
+  document.addEventListener("submit",e=>{
+    const form=e.target;if(!["patientForm","prescriptionForm","reminderForm","aiForm"].includes(form.id))return;e.preventDefault();
+    const values=Object.fromEntries(new FormData(form).entries());
+    if(form.id==="patientForm"){data.patients.push({id:id(),name:values.name.trim(),age:values.age.trim(),phone:values.phone.trim(),condition:values.condition.trim()});saveData();render();showToast("Patient added successfully.");}
+    if(form.id==="prescriptionForm"){data.prescriptions.push({id:id(),...values});saveData();render();showToast("Prescription added successfully.");}
+    if(form.id==="reminderForm"){data.reminders.push({id:id(),...values,status:"Pending"});saveData();render();showToast("Reminder scheduled.");}
+    if(form.id==="aiForm"){
+      const q=String(values.question||"").toLowerCase();let answer="I can explain common terms, but I cannot decide if a medicine or dose is right for you. Please confirm your prescription with a doctor or pharmacist.";
+      if(q.includes("twice daily")||q.includes("two times"))answer="“Twice daily” generally means two doses in one day. Follow the exact timing on your prescription and ask your pharmacist if unclear.";
+      else if(q.includes("before food")||q.includes("before meals"))answer="“Before food” means the prescription directs you to take the medicine before eating. The required interval depends on the medicine; check its label or ask a pharmacist.";
+      else if(q.includes("after food")||q.includes("after meals"))answer="“After food” means the medicine is intended to be taken after a meal, according to its label. Follow your prescriber's or pharmacist's instructions.";
+      else if(q.includes("missed dose"))answer="Missed-dose advice depends on the medicine. Check its leaflet or contact your pharmacist; do not double a dose unless a qualified professional tells you to.";
+      else if(q.includes("reminder")||q.includes("schedule"))answer="Open Reminders to save a date and time. This demo stores reminder records in your browser; it does not send SMS or guarantee background notifications.";
+      $("#aiAnswer").textContent=answer;
+    }
+  });
+  $("#logout").addEventListener("click",()=>{if(confirm("Clear all demo records saved in this browser?")){data={patients:[],prescriptions:[],reminders:[]};saveData();activePage="dashboard";render();showToast("Demo data cleared.");}});
+  clock();setInterval(clock,1000);render();
+})();
+</script>
+</body>
+</html>

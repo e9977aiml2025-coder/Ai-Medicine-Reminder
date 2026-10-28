@@ -1,0 +1,10 @@
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS scheduled_at timestamptz;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS message text;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS delivery_status text NOT NULL DEFAULT 'pending';
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS delivery_attempts integer NOT NULL DEFAULT 0;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS provider_sid text;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS delivery_error text;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS last_attempt_at timestamptz;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS delivered_at timestamptz;
+ALTER TABLE reminders ADD COLUMN IF NOT EXISTS claimed_at timestamptz;
+CREATE INDEX IF NOT EXISTS reminders_due_status_idx ON reminders (delivery_status, scheduled_at) WHERE active = true;

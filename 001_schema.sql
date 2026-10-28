@@ -1,0 +1,1 @@
+CREATE TABLE patients (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id text NOT NULL, full_name text NOT NULL, date_of_birth date, gender text, blood_group text, phone text, email text, allergies text, conditions text, emergency_contact text, notes text, created_at timestamptz NOT NULL DEFAULT now());
